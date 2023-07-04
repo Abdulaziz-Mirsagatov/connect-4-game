@@ -1,0 +1,493 @@
+@use "_reset";
+@use "_vars" as *;
+@use "_functions" as *;
+
+@mixin widget() {
+  box-shadow: 0px 10px 0px 0px #000;
+  border: 3px solid $neutralBlack;
+  transition: box-shadow 0.3s, border 0.3s;
+}
+
+@mixin widgetHover() {
+  box-shadow: 0px 10px 0px 0px $bgDark;
+  border: 3px solid var(--dark-purple, $bgDark);
+}
+
+.menu-wrapper {
+  align-items: center;
+
+  .menu {
+    width: min(90%, 550px);
+    gap: 5em;
+    justify-items: center;
+
+    .btn-group {
+      width: 100%;
+      gap: 1.2em;
+
+      .vs-player-btn {
+        background-color: $secondaryColor;
+      }
+    }
+  }
+}
+
+.game-wrapper {
+  align-content: start;
+  position: relative;
+
+  .main {
+    width: 85%;
+    justify-items: center;
+    align-items: start;
+    padding: 2em 0;
+    grid-template-areas:
+      "container container"
+      "playerCard1 playerCard2"
+      "board board"
+      "turn turn";
+    row-gap: 2em;
+    column-gap: 1em;
+
+    .top-menu {
+      justify-content: space-between;
+      align-items: center;
+      width: 100%;
+      grid-area: container;
+
+      .ingame-btn {
+        background-color: $bgDark;
+        color: $neutralWhite;
+        border: 0;
+        padding: 0.5em 1.5em;
+        border-radius: pxToRem(20);
+        font-size: pxToRem(16);
+      }
+    }
+
+    .player-card {
+      background-color: $neutralWhite;
+      padding: 1em;
+      width: 100%;
+      border-radius: pxToRem(20);
+      @include widget();
+      position: relative;
+      text-align: center;
+      gap: 0.5em;
+
+      h1 {
+        font-size: pxToRem(16);
+      }
+
+      img {
+        position: absolute;
+        top: 50%;
+      }
+
+      .score {
+        font-size: pxToRem(32);
+        @include grotesk-bold;
+      }
+    }
+
+    .player-card.player1 {
+      grid-area: playerCard1;
+
+      img {
+        left: 0;
+        transform: translate(-50%, -50%);
+      }
+    }
+
+    .player-card.player2 {
+      grid-area: playerCard2;
+
+      img {
+        right: 0;
+        transform: translate(50%, -50%);
+      }
+    }
+
+    .board {
+      position: relative;
+      margin-top: 1.5em;
+      z-index: 1;
+      grid-area: board;
+      width: pxToRem(280);
+
+      .board-layers {
+        aspect-ratio: 1 / 1;
+        margin-inline: auto;
+        position: relative;
+        grid-template-columns: repeat(7, min-content);
+        grid-template-rows: repeat(6, min-content);
+        padding: pxToRem(7);
+        gap: pxToRem(7);
+        place-items: center;
+
+        .black-layer,
+        .white-layer {
+          background-size: contain;
+          background-repeat: no-repeat;
+          width: 100%;
+          height: 100%;
+          position: absolute;
+        }
+
+        .black-layer {
+          background-image: url("../../assets/images/board-layer-black-small.svg");
+          z-index: 0;
+        }
+
+        .white-layer {
+          background-image: url("../../assets/images/board-layer-white-small.svg");
+          z-index: 2;
+        }
+
+        .board-btn {
+          width: pxToRem(32);
+          aspect-ratio: 1 / 1;
+          border-radius: 50%;
+          background: 0;
+          border: 0;
+          z-index: 3;
+        }
+      }
+
+      .turn-marker {
+        display: none;
+      }
+
+      .disk {
+        position: absolute;
+        animation: drop 0.5s ease-in forwards;
+        z-index: 1;
+        top: calc(var(--top, 0) / $scale);
+        left: calc(var(--left, 0) / $scale);
+        width: pxToRem(32);
+      }
+    }
+
+    .turn,
+    .winner-card {
+      place-content: center;
+      z-index: 2;
+      margin-top: -4em;
+      grid-area: turn;
+      text-align: center;
+    }
+
+    .turn {
+      background-size: cover;
+      width: pxToRem(191);
+      height: pxToRem(160);
+      color: $neutralWhite;
+
+      h1 {
+        font-size: pxToRem(16);
+      }
+
+      .time {
+        font-size: pxToRem(56);
+        text-transform: lowercase;
+      }
+    }
+
+    .winner-card {
+      @include widget();
+      background-color: $neutralWhite;
+      padding: 1em 3em;
+      border-radius: pxToRem(20);
+
+      h2 {
+        font-size: pxToRem(16);
+      }
+
+      h1 {
+        font-size: pxToRem(56);
+      }
+
+      .play-again-btn {
+        font-size: pxToRem(16);
+        background-color: $bgDark;
+        color: $neutralWhite;
+        border: 0;
+        padding: 0.5em 1em;
+        border-radius: pxToRem(20);
+      }
+    }
+
+    .shadow {
+      position: absolute;
+      left: 0;
+      right: 0;
+      bottom: 0;
+      height: pxToRem(200);
+      background-color: $bgDark;
+      border-radius: 60px 60px 0 0;
+    }
+
+    .shadow.red {
+      background-color: $primaryColor;
+    }
+
+    .shadow.yellow {
+      background-color: $secondaryColor;
+    }
+
+    .ingame-menu {
+      background-color: $bgLight;
+      justify-items: center;
+      width: min(95%, 500px);
+      gap: 4em;
+      position: fixed;
+      place-self: center;
+      z-index: 3;
+      border-radius: pxToRem(40);
+      @include widget();
+      padding: 3em 1em;
+
+      h1 {
+        font-size: pxToRem(56);
+        color: $neutralWhite;
+      }
+
+      .btn-group {
+        gap: 1.2em;
+        width: 100%;
+
+        .menu-btn {
+          text-align: center;
+        }
+      }
+
+      .quit-btn {
+        background-color: $primaryColor;
+        color: $neutralWhite;
+      }
+    }
+
+    .overlay {
+      position: absolute;
+      inset: 0;
+      background-color: rgba($color: #000000, $alpha: 0.5);
+      z-index: 2;
+    }
+  }
+}
+
+.menu-btn {
+  padding: 0 0.8em;
+  height: 80px;
+  border-radius: pxToRem(20);
+  font-size: pxToRem(24);
+  @include widget();
+  width: 100%;
+}
+
+.rules-wrapper {
+  place-items: center;
+
+  .rules-page {
+    width: min(550px, 95%);
+    background-color: $neutralWhite;
+    border-radius: pxToRem(40);
+    gap: 1em;
+    padding: 3em 1em;
+    @include widget;
+    position: relative;
+
+    h1 {
+      font-size: pxToRem(56);
+      justify-self: center;
+      margin-bottom: 1em;
+    }
+
+    h2 {
+      font-size: pxToRem(20);
+      color: $bgLight;
+    }
+
+    p {
+      margin-bottom: 1.5em;
+    }
+
+    li {
+      margin-left: 1em;
+    }
+
+    li:not(:last-child) {
+      margin-bottom: 0.5em;
+    }
+
+    p,
+    li {
+      @include grotesk-medium;
+      font-size: pxToRem(16);
+    }
+
+    img {
+      position: absolute;
+      bottom: 0;
+      left: 50%;
+      transform: translate(-50%, 50%);
+      cursor: pointer;
+    }
+  }
+}
+
+@media (min-width: 720px) {
+  .menu-wrapper {
+    background-color: $bgDark;
+
+    .menu {
+      background-color: $bgLight;
+      @include widget();
+      padding: 4em 3em;
+      border-radius: pxToRem(40);
+    }
+  }
+
+  .game-wrapper {
+    .main {
+      width: 600px;
+
+      .player-card {
+        grid-template-columns: repeat(2, 1fr);
+        padding: 2.5em 2em;
+
+        h1 {
+          font-size: pxToRem(20);
+        }
+
+        .score {
+          font-size: pxToRem(56);
+        }
+      }
+
+      .player-card.player2 {
+        .score {
+          order: -1;
+        }
+      }
+
+      .board {
+        width: pxToRem(500);
+        margin-top: 1em;
+
+        .board-layers {
+          padding: pxToRem(14);
+          gap: pxToRem(14);
+
+          .black-layer {
+            background-image: url("../../assets/images/board-layer-black-large.svg");
+          }
+
+          .white-layer {
+            background-image: url("../../assets/images/board-layer-white-large.svg");
+            z-index: 2;
+          }
+
+          .board-btn {
+            width: pxToRem(55);
+          }
+        }
+
+        .disk {
+          width: pxToRem(55);
+          top: var(--top, 0);
+          left: var(--left, 0);
+        }
+      }
+
+      .ingame-menu {
+        padding: 5em 2em;
+      }
+
+      .turn,
+      .winner-card {
+        margin-top: -6em;
+      }
+
+      .winner-card {
+        padding-inline: 4em;
+      }
+    }
+  }
+
+  .rules-wrapper {
+    .rules-page {
+      padding: 3em 2em;
+    }
+  }
+}
+
+@media (min-width: 1080px) {
+  .game-wrapper {
+    .main {
+      width: pxToRem(900);
+
+      grid-template-areas:
+        "playerCard1 container playerCard2"
+        "playerCard1 board playerCard2"
+        "turn turn turn";
+
+      .player-card {
+        align-self: center;
+        grid-template-columns: 1fr;
+        width: pxToRem(140);
+        padding-inline: 1em;
+        padding-bottom: 1em;
+
+        img {
+          top: 0;
+        }
+      }
+
+      .player-card.player1 {
+        img {
+          left: 50%;
+        }
+      }
+
+      .player-card.player2 {
+        .score {
+          order: 1;
+        }
+
+        img {
+          right: 50%;
+        }
+      }
+
+      .board {
+        .turn-marker {
+          display: block;
+          position: absolute;
+          margin-top: -2.2em;
+          transition: left 0.3s;
+          z-index: 2;
+        }
+      }
+
+      .top-menu .ingame-btn{
+        transition: background-color 0.3s, color 0.3s;
+      }
+
+      .top-menu .ingame-btn:hover {
+        background-color: $primaryColor;
+        color: $neutralWhite;
+      }
+    }
+  }
+
+  .menu-btn:hover {
+    @include widgetHover();
+  }
+}
+
+@keyframes drop {
+  0% {
+    top: pxToRem(-60);
+  }
+}

@@ -1,0 +1,56 @@
+@use "_vars" as *;
+@use "_functions" as *;
+
+*,
+*::before,
+*::after {
+  box-sizing: border-box;
+  padding: 0;
+  margin: 0;
+}
+
+button,
+input,
+h1,
+h2,
+h3,
+h4,
+h5,
+h6,
+p,
+a {
+  font-family: inherit;
+  font-weight: inherit;
+}
+
+button {
+  cursor: pointer;
+  text-transform: inherit;
+}
+
+body {
+  color: $neutralBlack;
+  @include grotesk-bold;
+  text-transform: uppercase;
+  background-color: $bgLight;
+}
+
+p {
+  @include grotesk-medium;
+}
+
+.flex {
+  display: flex;
+}
+
+.grid {
+  display: grid;
+}
+
+.menu-wrapper,
+.game-wrapper,
+.rules-wrapper {
+  min-height: 100dvh;
+  width: 100%;
+  justify-items: center;
+}

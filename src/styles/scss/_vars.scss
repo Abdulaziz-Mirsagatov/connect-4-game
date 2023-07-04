@@ -1,0 +1,28 @@
+// Colors
+$primaryColor: #fd6687;
+$secondaryColor: #ffce67;
+$bgDark: #5c2dd5;
+$bgLight: #7945ff;
+$neutralBlack: #000;
+$neutralWhite: #fff;
+
+// Font
+@font-face {
+  font-family: "Grotesk";
+  src: url("../../assets/fonts/SpaceGrotesk-VariableFont_wght.ttf");
+  font-weight: 500 700;
+}
+
+@mixin grotesk-medium {
+  font-family: "Grotesk";
+  font-weight: 500;
+  line-height: pxToRem(21);
+}
+@mixin grotesk-bold {
+  font-family: "Grotesk";
+  font-weight: 700;
+  line-height: pxToRem(21);
+}
+
+// Scale used for top and left properties of disk
+$scale: 1.79

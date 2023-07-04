@@ -1,0 +1,7 @@
+@function pxToRem($value) {
+  @return calc($value / 16) + rem;
+}
+
+@function moveMarkerToColumn($column) {
+  @return pxToRem(calc(21 + 70 * ($column - 1)));
+}
